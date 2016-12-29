@@ -3,8 +3,9 @@
 """#!/usr/bin/env python"""
 """ application file """
 from flask import Flask
-from flask import request, redirect, session, abort, url_for, render_template
+from flask import request, redirect, session, abort, url_for, render_template, jsonify
 from flask.ext.sqlalchemy import SQLAlchemy
+from flask.ext.bcrypt import Bcrypt
 from py2neo import Graph
 from config import BaseConfig
 
@@ -12,11 +13,13 @@ app = Flask(__name__)
 app.config.from_object(BaseConfig)
 app.config['DEBUG'] = True
 
+bcrypt = Bcrypt(app)
 graph = Graph('http://neo4j:neo4j@192.168.99.100:7474/db/data/')
 db = SQLAlchemy(app)
 
-from modelsneo import *
-from modelssql import *
+from modelsneo.user import User
+from modelssql.user import User
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     """ index handler """
